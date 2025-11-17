@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School LMS Project Plan (Developer)</title>
+    <style>
+        body {
+            font-family: Consolas, "Courier New", monospace;
+            line-height: 1.5;
+            background-color: #2b2b2b;
+            color: #f8f8f2;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        h1,
+        h2,
+        h3 {
+            color: #50fa7b;
+        }
+        
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #50fa7b;
+            padding-bottom: 10px;
+            font-size: 2em;
+        }
+        
+        h2 {
+            color: #8be9fd;
+            border-bottom: 1px dashed #555;
+            padding-bottom: 5px;
+            font-size: 1.5em;
+        }
+        
+        .project-overview {
+            background-color: #44475a;
+            border: 1px solid #6272a4;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 25px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .phase {
+            background-color: #383a59;
+            border: 1px solid #6272a4;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .milestone {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #f1fa8c;
+            background-color: #44475a;
+            border: 1px solid #f1fa8c;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 15px;
+            font-family: Arial, sans-serif;
+        }
+        
+        ul {
+            padding-left: 20px;
+            list-style-type: '» ';
+        }
+        
+        li {
+            margin-bottom: 8px;
+            word-wrap: break-word;
+            /* Wrap long lines */
+        }
+        
+        code {
+            background-color: #2b2b2b;
+            border-radius: 4px;
+            color: #f8f8f2;
+            padding: 2px 4px;
+            font-size: 0.9em;
+            word-wrap: break-word;
+        }
+        
+        .critical {
+            color: #ff5555;
+            font-weight: bold;
+        }
+        /* --- Responsive Styles --- */
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                margin: 10px auto;
+                width: 100%;
+            }
+            .phase {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            h2 {
+                font-size: 1.3em;
+            }
+            .project-overview,
+            .milestone {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>School LMS (Internal Dev Plan)</h1>
+
+    <div class="project-overview">
+        <p><strong>STACK (Assumed):</strong> [e.g., MERN - Mongo, Express, React, Node / LAMP - Linux, Apache, MySQL, PHP]</p>
+        <p><strong>BUDGET:</strong> $1500</p>
+        <p><strong>TIMELINE:</strong> 90 Days (9x 10-Day Sprints)</p>
+        <p>This is a 9-sprint build for a MV-LMS. The budget is <span class="critical">extremely tight</span>. We must focus on robust, secure, and efficient implementation. No fluff. All tasks listed are the core deliverables for the milestone payment.</p>
+    </div>
+
+    <div class="phase">
+        <h2>Phase 1: Auth, DB Schema & Admin (Days 1-10)</h2>
+        <h3>Objectives:</h3>
+        <p>Establish normalized DB schema, secure auth backend, and Admin user management.</p>
+        <h3>Tasks:</h3>
+        <ul>
+            <li>Initialize project, set up CI/CD pipeline (basic).</li>
+            <li>Design and implement normalized database schema (Users, Courses, Roles, Permissions).</li>
+            <li>Implement secure authentication:
+                <ul>
+                    <li>Use <code>bcrypt</code> for password hashing.</li>
+                    <li>Implement JWT (Access + Refresh Token) strategy.</li>
+                </ul>
+            </li>
+            <li>Build core <code>User</code> model and admin-only CRUD endpoints for <code>/api/users</code>.</li>
+        </ul>
+        <p><strong>Deliverable:</strong> Admin can log in, create/edit users, and assign roles. Secure endpoints are in place.</p>
+        <div class="milestone">Milestone: $200</div>
+    </div>
+
+    <div class="phase">
+        <h2>Phase 2: RBAC & Course Management (Days 11-20)</h2>
+        <h3>Objectives:</h3>
+        <p>Build a granular Role-Based Access Control (RBAC) system and the Teacher's course-management logic.</p>
+        <h3>Tasks:</h3>
+        <ul>
+            <li>Implement RBAC middleware to protect routes and actions based on user role (e.g., <code>can('create', 'Course')</code>).</li>
+            <li>Build Teacher-role dashboard and UI.</li>
+            <li>Create <code>Course</code> model with 1:N relationship to <code>User (Teacher)</code> and N:M relationship to <code>User (Student)</code>.</li>
+            <li>Build teacher-protected CRUD endpoints for <code>/api/courses</code> (ensure teachers can only edit *their own* courses).</li>
+        </ul>
+        <p><strong>Deliverable:</strong> Teachers can log in, see their dashboard, and create/edit/delete their own courses.</p>
+        <div class="milestone">Milestone: $200</div>
+    </div>
+
+    <div class="phase">
+        <h2>Phase 3: Content Module & SIS Ingestion (Days 21-30)</h2>
+        <h3>Objectives:</h3>
+        <p>Implement secure file handling for content and a robust data ingestion script for the SIS sync.</p>
+        <h3>Tasks:</h3>
+        <ul>
+            <li>Create <code>Module</code> and <code>Content</code> models (for text and file uploads).</li>
+            <li>Implement secure file handling (e.g., upload to S3/blob storage, NOT the server filesystem; use signed URLs if needed).</li>
+            <li><strong class="critical">SIS Sync:</strong> Build an asynchronous data ingestion module (e.g., a script triggered by admin upload).
+                <ul>
+                    <li>Must parse CSV/JSON, validate data, and handle errors gracefully.</li>
+                    <li>Must perform "upsert" logic (update existing students, create new ones).</li>
+                    <li>Must correctly populate the <code>Course</code>-<code>Student</code> N:M relationship.</li>
+                </ul>
+            </li>
+        </ul>
+        <p><strong>Deliverable:</strong> Teachers can upload content. Admin can run the sync script to populate the platform.</p>
+        <div class="milestone">Milestone: $200</div>
+    </div>
+
+    <div class="phase">
+        <h2>Phase 4: Assignment Module (Days 31-40)</h2>
+        <h3>Objectives:</h3>
+        <p>Create the <code>Assignment</code> schema and link it to the core Course and Gradebook models.</p>
+        <h3>Tasks:</h3>
+        <ul>
+            <li>Create <code>Assignment</code> model: <code>{ title, instructions, course_id, due_date, total_points }</code>.</li>
+            <li>Build teacher-protected CRUD endpoints for <code>/api/assignments</code>.</li>
+            <li>Integrate assignments into the Course UI for both students and teachers.</li>
+        </ul>
+        <p><strong>Deliverable:</strong> Teachers can create/edit assignments with due dates. Students can see them.</p>
+        <div class="milestone">Milestone: $170</div>
+    </div>
+
+    <div class="phase">
+        <h2>Phase 5: Submission Workflow & Dynamic Gradebook (Days 41-50)</h2>
+        <h3>Objectives:</h3>
+        <p>Build the submission-handling logic and a dynamic, performant Gradebook UI.</p>
+        <h3>Tasks:</h3>
+        <ul>
+            <li>Create <code>Submission</code> model: <code>{ assignment_id, student_id, file_url, submitted_at, grade, feedback }</code>.</li>
+            <li>Build student-side file upload endpoint (<code>POST /api/submissions</code>).</li>
+            <li><strong class="critical">Dynamic Gradebook UI:</strong> Build a component (e.g., React/Vue) that renders a dynamic matrix (students x assignments).
+                <ul>
+                    <li>Cell data (grade/submission status) must be fetched/updated asynchronously to avoid full reloads.</li>
+                    <li>Implement <code>PUT /api/submissions/:id</code> endpoint for updating grades.</li>
+                </ul>
+            </li>
+        </ul>
+        <p><strong>Deliverable:</strong> Students can submit files. Teachers can view all submissions in the dynamic grid and enter grades.</p>
+        <div class="milestone">Milestone: $165</div>
+    </div>
+
+    <div class="phase">
+        <h2>Phase 6: Server-Validated Quiz Engine & Calendar API (Days 51-60)</h2>
+        <h3>Objectives:</h3>
+        <p>Build a basic, server-side-validated quiz engine and a "smart" calendar API.</p>
+        <h3>Tasks:</h3>
+        <ul>
+            <li>Create <code>Quiz</code> and <code>QuizResult</code> models.</li>
+            <li>Build quiz-taking UI for students.</li>
+            <li><strong class="critical">Server-Side Validation:</strong> On quiz submission, the server (not the client) must calculate the score and save it to <code>QuizResult</code>.</li>
+            <li>Create a dynamic event-aggregation endpoint (e.g., <code>/api/calendar/events</code>) that merges <code>Assignment</code> and <code>Quiz</code> due dates for the authenticated user.</li>
+        </ul>
+        <p><strong>Deliverable:</strong> Teachers can create auto-graded quizzes. All users have a calendar showing their personal due dates.</p>
+        <div class="milestone">Milestone: $165</div>
+    </div>
+
+    <div class="phase">
+        <h2>Phase 7: Student Dashboard & Mobile-First Optimization (Days 61-70)</h2>
+        <h3>Objectives:</h3>
+        <p>Build the student-facing dashboard and conduct a full pass for mobile-first responsiveness and performance.</p>
+        <h3>Tasks:</h3>
+        <ul>
+            <li>Build the Student Dashboard UI (widgets for "My Courses," "Upcoming Deadlines").</li>
+            <li>Refactor all existing UIs (Admin, Teacher, Student) to be fully mobile-first and responsive.</li>
+            <li>Optimize client-side performance:
+                <ul>
+                    <li>Implement code-splitting (e.g., route-based chunking).</li>
+                    <li>Lazy-load images and non-critical components.</li>
+                </ul>
+            </li>
+        </ul>
+        <p><strong>Deliverable:</strong> A clean student dashboard. The entire application is responsive and fast on mobile.</p>
+        <div class="milestone">Milestone: $135</div>
+    </div>
+
+    <div class="phase">
+        <h2>Phase 8: Parent Portal (Delegated Access) (Days 71-80)</h2>
+        <h3>Objectives:</h3>
+        <p>Implement a secure "delegated access" model for the Parent role.</p>
+        <h3>Tasks:</h3>
+        <ul>
+            <li>Implement <code>child_id</code> link in the <code>User (Parent)</code> model.</li>
+            <li>Build Parent Dashboard UI (read-only).</li>
+            <li><strong class="critical">Sandboxed Endpoints:</strong> Create parent-protected endpoints (e.g., <code>/api/parent/grades</code>) that are *strictly* sandboxed to only pull data for the user's linked <code>child_id</code>. Must prevent any
+                horizontal privilege escalation.</li>
+        </ul>
+        <p><strong>Deliverable:</strong> Parents can log in and securely view *only* their own child's grades and deadlines.</p>
+        <div class="milestone">Milestone: $135</div>
+    </div>
+
+    <div class="phase">
+        <h2>Phase 9: QA, Security Audit & Deployment Prep (Days 81-90)</h2>
+        <h3>Objectives:</h3>
+        <p>Perform a comprehensive QA and security review. Prepare the application for production deployment.</p>
+        <h3>Tasks:</h3>
+        <ul>
+            <li><strong class="critical">Security Audit:</strong> Actively test for common vulnerabilities:
+                <ul>
+                    <li>Cross-Site Scripting (XSS) on all user inputs.</li>
+                    <li>CSRF (ensure anti-CSRF tokens are used if not using JWTs in headers).</li>
+                    <li>Insecure Direct Object Reference (IDOR) - (e.g., can teacher 1 edit teacher 2's course?).</li>
+                </ul>
+            </li>
+            <li><strong>Performance Audit:</strong> Run Lighthouse audits on key pages and fix major issues (LCP, TTI).</li>
+            <li><strong>E2E Testing:</strong> Write and run end-to-end tests (e.g., basic Cypress/Selenium scripts) for all critical user flows.</li>
+            <li><strong>Containerization:</strong> Create a <code>Dockerfile</code> and <code>docker-compose.yml</code> for a reproducible production build.</li>
+        </ul>
+        <p><strong>Deliverable:</strong> A stable, secure, and tested application, containerized and ready for deployment.</p>
+        <div class="milestone">Milestone: $130</div>
+    </div>
+
+</body>
+
+</html>
